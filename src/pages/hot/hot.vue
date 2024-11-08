@@ -42,6 +42,25 @@ onLoad(() => {
   getHotRecommendData()
 })
 
+// 滚动触底
+const onScolltolower = async () => {
+  // 获取当前选项
+  const currsubTypes = subTypes.value[activeIndex.value]
+  // 当前页码累加
+  currsubTypes.goodsItems.page++
+  // 调用API传参
+  const res = await getHotRecommendAPI(currUrlMap!.url, {
+    subType: currsubTypes.id,
+    page: currsubTypes.goodsItems.page,
+    pageSize: currsubTypes.goodsItems.pageSize
+  })
+  // 新的列表选项
+  const newSubTypes = res.result.subTypes[activeIndex.value]
+  // 数组追加
+  currsubTypes.goodsItems.items.push(...newSubTypes.goodsItems.items)
+  
+}
+
 </script>
 
 <template>
@@ -54,20 +73,21 @@ onLoad(() => {
     <!-- 推荐选项 -->
     <view class="tabs">
       <text v-for="(item, index) in subTypes" :key="item.id" class="text" :class="{ active: index === activeIndex }"
-        @tap="activeIndex = index">{{ item.title
+        @tap="activeIndex = index"
+        @scolltolower="onScolltolower">{{ item.title
         }}</text>zh
     </view>
     <!-- 推荐列表 -->
     <scroll-view v-for="(item, index) in subTypes" :key="item.id" v-show="activeIndex === index" scroll-y
       class="scroll-view">
       <view class="goods">
-        <navigator hover-class="none" class="navigator" v-for="goods in item.goodsItems.items" :key="goods.id"
-          :url="`/pages/goods/goods?id=${goods.id}`">
-          <image class="thumb" :src="goods.picture"></image>
-          <view class="name ellipsis">{{ goods.name }}</view>
+        <navigator hover-class="none" class="navigator" v-for="good in item.goodsItems.items" :key="good.id"
+          :url="`/pages/goods/goods?id=${good.id}`">
+          <image class="thumb" :src="good.picture"></image>
+          <view class="name ellipsis">{{ good.name }}</view>
           <view class="price">
             <text class="symbol">¥</text>
-            <text class="number">{{ goods.price }}</text>
+            <text class="number">{{ good.price }}</text>
           </view>
         </navigator>
       </view>
