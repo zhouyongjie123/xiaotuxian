@@ -11,6 +11,7 @@ import { getHomeHotAPI } from '@/services/home';
 import type { HotItem } from '@/types/home';
 import type { XtxGuessInstance } from '@/types/component';
 import XtxGuess from '@/components/XtxGuess.vue';
+import PageSkeleton from './components/PageSkeleton.vue'
 
 // 获取轮播图数据
 const bannerList = ref<BannerItem[]>([])
@@ -33,11 +34,12 @@ const getHomeHotData = async () => {
   hotList.value = res.result
 }
 
-
-onLoad(() => {
-  getHomeBannerData()
-  getHomeCategoryData()
-  getHomeHotData()
+const isLoading = ref(false)
+// 页面加载
+onLoad(async () => {
+  isLoading.value = true
+  await Promise.all([getHomeBannerData(), getHomeCategoryData(), getHomeHotData()])
+  isLoading.value = false
 })
 
 // 获取猜你喜欢组件实例
@@ -50,18 +52,28 @@ const onScrolltolower = () => {
 
 <template>
   <CustomNavbar />
-  <XtxSwiper :list="bannerList" />
-  <CategoryPanel :list="categoryList" />
-  <HotPanel :list="hotList" />
   <!-- 滚动容器 -->
-  <scroll-view scroll-y @scrolltolower="onScrolltolower">
-    <!-- 猜你喜欢 -->
-    <XtxGuess ref="guessRef" />
+  <scroll-view scroll-y class="scroll-view" @scrolltolower="onScrolltolower">
+    <PageSkeleton v-if="isLoading" />
+    <template v-else>
+      <XtxSwiper :list="bannerList" />
+      <CategoryPanel :list="categoryList" />
+      <HotPanel :list="hotList" />
+      <!-- 猜你喜欢 -->
+      <XtxGuess ref="guessRef" />
+    </template>
   </scroll-view>
 </template>
 
 <style lang="scss">
 page {
   background-color: #f7f7f7;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.scroll-view {
+  flex: 1;
 }
 </style>

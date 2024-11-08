@@ -15,7 +15,7 @@ const guessList = ref<GuessItem[]>([])
 const finish = ref(false)
 // 获取猜你喜欢数据
 const getHomeGoodsGuessLikeData = async () => {
-  // 退出分页判断
+  // 退出分页判断k
   if (finish.value === true) {
     return uni.showToast({ icon: 'none', title: '没有更多数据~' })
   }
