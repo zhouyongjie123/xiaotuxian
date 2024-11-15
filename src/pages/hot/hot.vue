@@ -89,7 +89,7 @@ const onScolltolower = async () => {
         @tap="activeIndex = index"
         @scolltolower="onScolltolower"
         >{{ item.title }}</text
-      >zh
+      >
     </view>
     <!-- 推荐列表 -->
     <scroll-view
@@ -117,7 +117,6 @@ const onScolltolower = async () => {
       </view>
       <view class="loading-text">
         {{ item.finish ? '没有更多数据了' : '正在加载' }}
-        正在加载...
       </view>
     </scroll-view>
   </view>
