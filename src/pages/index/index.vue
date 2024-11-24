@@ -9,9 +9,10 @@ import { getHomeCategoryAPI } from '@/services/home';
 import HotPanel from './components/HotPanel.vue'
 import { getHomeHotAPI } from '@/services/home';
 import type { HotItem } from '@/types/home';
-import type { XtxGuessInstance } from '@/types/component';
 import XtxGuess from '@/components/XtxGuess.vue';
 import PageSkeleton from './components/PageSkeleton.vue'
+import { useGuessList } from '@/composables'
+
 
 // 获取轮播图数据
 const bannerList = ref<BannerItem[]>([])
@@ -42,12 +43,7 @@ onLoad(async () => {
   isLoading.value = false
 })
 
-// 获取猜你喜欢组件实例
-const guessRef = ref<XtxGuessInstance>()
-// 滚动触底事件
-const onScrolltolower = () => {
-  guessRef.value?.getMore()
-}
+const { guessRef, onScrolltolower } = useGuessList()
 </script>
 
 <template>
